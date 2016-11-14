@@ -84,9 +84,20 @@ public class ServerThread extends Thread
 	BigInteger sophie;
 	// open reader for usesr input
 	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+	BigInteger pubKeyRec;
+	BigInteger sharedKey;
+	BigInteger g;
+	BigInteger pMinus2;
+	BigInteger b;
+	BigInteger gToBmodP;
 	try {
-		 sophie = new BigInteger(CryptoUtilities.receive(in));
-		BigInteger g = new BigInteger(CryptoUtilities.receive(in));
+		sophie = new BigInteger(CryptoUtilities.receive(in));
+		g = new BigInteger(CryptoUtilities.receive(in));
+		pMinus2 = sophie.subtract(BigInteger.valueOf(2));
+		b = PrimeUtil.getExponent(pMinus2);
+		gToBmodP = g.modPow(b, sophie);
+		CryptoUtilities.send(gToBmodP.toByteArray(), out);
+		pubKeyRec = new BigInteger(CryptoUtilities.receive(in));
 	} /*catch (IOException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
@@ -110,9 +121,10 @@ public class ServerThread extends Thread
 		return;
 	    }
 	}
+	sharedKey = pubKeyRec.modPow(b, sophie);
 
 	// compute key:  1st 16 bytes of SHA-1 hash of seed
-	key = CryptoUtilities.key_from_seed(sophie.toByteArray());
+	key = CryptoUtilities.key_from_seed(sharedKey.toByteArray());
  	debug("Using key = " + CryptoUtilities.toHexString(key.getEncoded()));
    }
 

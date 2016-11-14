@@ -99,17 +99,29 @@ public class Client
 	    /*System.out.print("Please enter seed for key derivation: ");
 	    seed = stdIn.readLine();*/
 		BigInteger sophie = PrimeUtil.sopieGermainPrime();
+		BigInteger pMinus2 = sophie.subtract(BigInteger.valueOf(2));
+		BigInteger g = PrimeUtil.primitiveRoot(sophie);
+		BigInteger a = PrimeUtil.getExponent(pMinus2);
+		BigInteger gToAmodP = g.modPow(a, sophie); 
+		BigInteger pubKeyRec = BigInteger.ONE;
+		BigInteger sharedKey;
 		/*long t = 7;
 		BigInteger primRtTest = BigInteger.valueOf(t);
 		*/
-		BigInteger g = PrimeUtil.primitiveRoot(sophie);
+		
 		try {
 			CryptoUtilities.send(sophie.toByteArray(), out);
 			CryptoUtilities.send(g.toByteArray(), out);
+			pubKeyRec = new BigInteger(CryptoUtilities.receive(in));
+			CryptoUtilities.send(gToAmodP.toByteArray(), out);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		sharedKey = pubKeyRec.modPow(a, sophie);
+		
+		
 	
 		
 	//}
@@ -119,7 +131,7 @@ public class Client
 	}*/
 
 	// compute key:  1st 16 bytes of SHA-1 hash of seed
-	key = CryptoUtilities.key_from_seed(sophie.toByteArray());
+	key = CryptoUtilities.key_from_seed(sharedKey.toByteArray());
  	debug("Using key = " + CryptoUtilities.toHexString(key.getEncoded()));
     }
 

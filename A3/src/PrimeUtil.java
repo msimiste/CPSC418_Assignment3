@@ -44,4 +44,11 @@ public class PrimeUtil {
 		System.out.println(g);
 		return g;		
 	}
+	
+	public static BigInteger getExponent(BigInteger pMinus2){
+		Random rand = new Random(System.currentTimeMillis());
+		int numBits = pMinus2.bitCount();
+		BigInteger exp = new BigInteger(numBits,rand);
+		return exp;
+	}
 }
