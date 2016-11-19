@@ -1,0 +1,293 @@
+\documentclass{assignment}
+
+\coursetitle{Introduction to Cryptography}
+\courselabel{CPSC 418}
+\exercisesheet{Home Work \#3}{}
+\student{Mike Simister - 10095107}
+\semester{Fall 2016}
+%\usepackage[pdftex]{graphicx}
+%\usepackage{subfigure}
+\usepackage{amsfonts}
+\usepackage[fleqn]{amsmath}
+\usepackage[normalem]{ulem}
+\usepackage{amsthm}
+\usepackage{physics}
+\usepackage[singlespacing]{setspace}
+
+\begin{document}
+\sloppy
+
+\begin{center}
+\renewcommand{\arraystretch}{2}
+\begin{tabular}{|c|c|c|} \hline
+Problem & Marks \\ \hline \hline
+1 & \\ \hline
+2 & \\ \hline
+3 & \\ \hline
+4 & \\ \hline
+5 & \\ \hline
+6 & \\ \hline
+7 & \\ \hline \hline
+Total & \\ \hline
+\end{tabular}
+\end{center}
+\newpage
+
+\begin{flushleft}
+\begin{problemlist}
+\pbitem (Flawed hash function based MAC designs, 28 marks)
+%\begin{problem}
+%{answer}
+\item[(a)] \hspace{1cm}\\
+\begin{enumerate}
+\item[(i)]\hspace{1cm}\\
+\begin{align*}
+M_1 &= f(f(IV,K),M_1)\\
+&= f(H_1,M'_1) \leftarrow \text{ note: } M_1 \text{ is now padded } \\
+&= H(M)\\
+&= H_L\\
+&= MAC_1\\
+\hspace{1cm}\\
+M_2 &= H(K||M'_1||X)\\
+&= f(f(f(IV,K),M'_1),X))\\
+&= f(MAC_{1},X)\\
+&= MAC_{2}\\
+\end{align*}
+\item[(ii)]\hspace{1cm}\\
+\begin{align*}
+C_k(M) &= H(M'||K) \text{ where M' is M with padding}\\
+M_1 &= f(IC,M)\\
+&= f(f(IV,M'_1),K)\\
+&= H(M)\\
+&= H_L\\
+&= MAC_1\\
+\hspace{1cm}\\
+M_2 &= f(IV,M_2) \\
+&= f(f(IV,M),K) \leftarrow \text{ since } H(M_2) = H(M_1) \\
+&= H(M)\\
+&= HL\\
+&= MAC_1\\  
+\end{align*}
+\end{enumerate}
+\newpage
+\item[(b)]\hspace{1cm}\\
+\begin{enumerate}
+\item[(i)]\hspace{1cm}\\
+\begin{doublespace}
+$M_1 \text{ is one block so no padding, } MAC_1 = E_k(M_1)$ \\
+$M_2 \text{ is one block so no padding, } MAC_2 = E_k(M_2)$ \\
+$M_3 \text{ is two blocks i.e. } \begin{cases} \text{Block 1 } = M_1\\
+\text{Block 2 }= \left\{0\right\}^n\\\end{cases}$\\
+\hspace{1cm}\\
+$MAC_3 = E_k(M_1 \oplus \left\{0\right\}^n)$\\
+\hspace{1.1cm}$      = E_k(MAC_1)$\\
+\item[(ii)]
+$M_1 \text{ is one block so no padding, } MAC_1 = E_k(M_1)$ \\
+$M_2 \text{ is one block so no padding, } MAC_2 = E_k(M_2) $\\
+$M_3 \text{ is two blocks so it will take 2 iterations to compute } MAC_3$\\
+$\text{Iteration 1  }E_k(M_1) = MAC_1$\\
+$\text{Iteration 2 } E_k(MAC_1 \oplus X) = MAC_3$\\
+\hspace{1cm}\\
+$M_4 \text{ is two blocks so it will take 2 iterations to compute } MAC_4$\\
+$\text{Iteration 1 }E_k(M_2) = MAC_2$\\
+$\text{Iteration 2 } E_k(MAC_1 \oplus X \oplus MAC_2 \oplus MAC_2)$\\
+$\text{Iteration 2 } E_k(MAC_1 \oplus X) = MAC_3 \leftarrow$ Since $MAC_2 \oplus MAC_2$ cancel\\
+\end{doublespace}
+\end{enumerate}
+%\end{answer}
+%\end{problem}
+\newpage
+%\begin{problem}
+%\begin{answer}
+\pbitem (A modified man-in-the-middle attack on Diffie-Hellman, 12 marks)
+\item[(a)] \hspace{1cm}\\
+\begin{tabular}{c | c | c}\\
+Alice &Mallory &Bob\\ \hline
+chooses $a$ &chooses $q$		&chooses $b$\\
+computes $g^a$ &	&computes $g^b$\\
+sends $g^a \rightarrow$ &intercepts  $g^a$ sends $g^{aq} \rightarrow$ &recieves $g^{aq}$\\
+recieves $g^{bq} \leftarrow$ &$\leftarrow g^{bq}$ sends  intercepts  $g^b$   &$\leftarrow g^{b}$ sends \\ 
+computes $K = g^{abq}$	& 	&computes $K = g^{abq}$\\ 
+\end{tabular}
+\item [(b)]\hspace{1cm}\\
+Things we know:
+\begin{enumerate}
+\item[(1)] g is a primitive root, or a generator in $\mathbb{Z}^{*}_{p}$\\
+\item[(2)] the order of $g$ is $|\mathbb{Z}^{*}_{p}| = (p-1)$\\
+\item[(3)] $p = mq + 1$, $(p-1) = mq$\\
+\item[(4)] $g^{(p-1)} \equiv 1 \pmod{p}$, $g^{mq} \equiv 1 \pmod{p}$\\
+\item[(5)] $g^{2mq} \pmod{p} \equiv g^{mq} * g^{mq} \pmod{p} \equiv 1 * 1 \pmod{p} \equiv 1 \pmod{p}$\\
+\item[(6)] $g^{(k)mq} \pmod{p} \equiv 1 \pmod{p} $ where $k \in \mathbb{Z}_{0\geq}$, that is $0 \leq k$\\
+\end{enumerate}
+\begin{doublespace}
+So, if $ab \geq m$, we can say that $abq = ((k)m + r)q$ where $0 \leq r < m$, $1 \leq k$\\
+and $g^{(k)mq} \equiv 1 \pmod{p}$\\
+So, when $ab = (k)m$, $g^{abq} \equiv g^{(k)mq} \equiv 1 \pmod{p}$\\
+Otherwise, $g^{abq} = g^{((k)m + r)q} \equiv g^{(k)mq} * g^{rq} \equiv 1 * g^{rq} \pmod{p}$\\
+And since, $g$ is a generator, and q is a constant the values obtained from calculating $g^{0}\pmod{p}$ to $g^{qr} \pmod{p}$ are unique values
+and since $0 \leq r < m$ there are $m$ possible values\\
+\end{doublespace}
+\item[(c)]\hspace{1cm}\\
+The advantage of this variation is that once the attacker, Mallory, has intercepted\\
+and modified both $g^{aq}$ and $g^{bq}$ there is no need to do any further work.\\
+That is to say, Alice and Bob can continue communicating completely unaware that\\
+Mallory has tampered with their communication. Mallory can easily compute the key\\
+and decrypt/encrypt any/all messages she chooses. In the version of discussed in\\
+class, after Mallory intercepts $g^{a}$ and $g^{b}$ sends $g^{ae}$ or $g^{be}$ Mallory would\\
+need to continuously intercept and encrypt/decrypt ALL messages. Otherwise, if\\
+even one message is not intercepted by Mallory, the decryption by the intended\\
+recipient will fail, and alert the recipient that the system has been compromised.\\
+%\end{answer}
+%\end{problem}
+\newpage
+\pbitem (Binary Exponentiaion, 12 marks)
+\item [(a)] Define $s_0 = b_0$ and $s_{i+1} = 2_{Si} + b_{i+1}$\\
+\begin{flushleft}
+\begin{align*}
+\text{Suppose that: } & S_i = \sum_{n=0}^{i} b_n2^{i-n}\\  
+\text{We want to show that: }  &S_{i+1} = \sum_{n=0}^{i+1} b_n2^{i+1-n}\\ 
+\text{Base Case: } &i = 0\text{,   }\\
+&S_{0} = \sum_{n=0}^{0} b_n2^{0} = b_02^0 = b_0\\ 
+\text{So, } s_{i+1} &= 2_{Si} + b_{i+1}\\
+&= 2\left(\sum_{n=0}^{i} b_n2^{i-n}\right) + b_{i+1}\\
+&= 2\left(b_0s^{i-0}\right) + 2\left(b_i2^{i-1}\right) + . . . + 2\left(b_i2^{i-i}\right) + b_{i+1}\\
+&= b_02^{i+1} + b_12{i} + . . . + b_i2^1 + b(i+1)(2^0)\\
+S_{i+1} &= \sum_{n=0}^{i+1} b_n2^{i+1-n} \qed\\ 
+\end{align*}
+\end{flushleft}
+\item[(b)] 
+\begin{align*}
+\text{Suppose } r_i \equiv a^{S_i} \pmod{m}\\
+\hspace{1cm}\\
+\text{Base Case } r_0 &\equiv a^1 \pmod{m}\\
+r_0 &\equiv a \pmod{m}\text{  base case proved} \text{ }\checkmark\\
+\hspace{1cm}\\
+\text{W.T.S. } r_{i+1} \equiv a^{S_{i+1}} \pmod{m} \text{ for } 0 \leq i \leq K \\
+\hspace{1cm}\\
+\text{by the algorithm definition, we are given: }\\
+\hspace{1cm}\\
+r_{i+1} &= \begin{cases}r^{2}_i \pmod{m} \text{ if } b_{i+1} = 0,\\
+r^{2}_ia \pmod{m} \text{ if } b_{i+1} = 1\end{cases}\\
+\hspace{1cm}\\
+\text{So, in case 1 where } b_{i+1} = 0\text{,}\\
+\hspace{1cm}\\
+r_{i+1} &= r^{2}_{i}\\
+r_{i+1} &= r_i * r_i\\
+&= a^{S_i} * a^{S_i} \textbf{ By the I.H.}\\
+&=a^{2S_i}\\
+\text{since } b_{i+1} = 0 \text{ we can write: } &a^{2S_i} \text{ as } a^{2S_{i} + b_{i+1}}\\
+\text{and by defn in part (a) above: } &2S_i + b_{i+1} = S_{i+1}\\
+\text{so, } a^{2S_i} &= a^{S_{i+1}} = r_{i+1}\\
+\hspace{1cm}\\
+\text{in case 2, where } b_{i+1} = 1\\
+r_{i+1} &= r^{2}_{i} * a\\
+r_{i+1} &= r_1 * r_i  * a\\
+&= a^{S_i} * a^{S_i} * a \textbf{ by I.H. }\\
+&= a^{2S_{i} + 1}\\
+\text{ since } b_{i+1} &= 1\text{, }\\
+a^{2S_{i} + 1} &= a^{2S{i} + b_{i+1}}\\
+\text{and by the same defn in part (a), we can say that: }\\
+a^{2S{i} + b_{i+1}} &= a^{S_{i+1}} = r_{i+1} \qed\\ 
+\end{align*}
+\newpage
+\item [(c)]\hspace{1cm}\\
+\begin{align*}
+a_n &\equiv r_k \pmod{m} \text{, let } r_k = r_i\\
+a_n &\equiv r_i \equiv a^{S_i} \pmod{m}\\
+\text {where: }\\
+n &= b_02^k + b_12^{k-1} + ... + b_{k-1}2 + b_0 \textbf{ by defn}\\
+S_i &= b_02^{i-0} + b_i2^{i-1} + ... + b_i2^{i-i}\textbf{ by unwrapping the }\sum \textbf{ in part (a)}\\
+\text{so, }\\
+n &= S_i\\
+\text{ so, }\\
+a^n &\equiv a^{S_i} \equiv r_i \pmod{m}\qed\\
+\end{align*}
+\newpage
+\pbitem (RSA toy example for practicing binary exponentiaion)
+\item [(a)] \hspace{1cm}\\
+Using the binary exponentiation algorithm where, $a = 17, n = 11, m = 77$\\
+to calculate $a^n \pmod m$ since:\\
+\begin{singlespace}
+\begin{align*}
+C &\equiv M^e \pmod n\\
+&\equiv 17^{11} \pmod {77}\\
+\end{align*}
+so $n = 1011$\\
+\begin{align*}
+r_0 &= a \pmod n\\
+&= 17 \pmod {77}\\
+\hspace{1cm}\\
+r_1 &= (r_{0})^2 \pmod {77}\\ 
+&= 17^2 \pmod {77}\\ 
+&= 58 \pmod {77}\\
+\hspace{1cm}\\
+r_2 &= (r_1)^2 * 17 \pmod {77}\\
+&= 58^2 * 17 \pmod {77}\\
+&= 54 \pmod {77}\\
+\hspace{1cm}\\
+r_3 &= (r_2)^2 * 17 \pmod {77}\\
+&= 54^2 * 17 \pmod {77}\\
+&= 61 \pmod {77}\\
+\end{align*}
+so, $C = 61$\\
+\end{singlespace}
+\newpage
+\item [(b)] 
+\begin{align*}
+n &= pq \text{ where } p,q  \text{ are prime }\\
+77 &= pq\\
+&= 7 * 11\\
+&\text{ so }\\
+\phi(n) &= 6 * 10\\
+&=60\\ 
+&\text{ we want } d \text{ such that } de \equiv 1 \pmod {\phi(n)}\\
+&\text{ or } (d)11 \equiv 1 \pmod{60}\\
+\end{align*}
+Extended Euclidean Algorithm:\\
+\hspace{1cm}\\
+GCD(60,11) = \\
+\hspace{1cm}\\
+\begin{tabular}{c c c c r l}
+A &B &Q &R &\hspace{0.5cm} Factors &\hspace{1cm}\\
+60 &11 &5 &5 &$60=$&$11(5) + 5$\\
+11 &5 &2 &1 &$11=$&$5(2) + 1$\\
+5 &1 &5 &0 &$5=$&$5(1) + 0$\\
+\end{tabular}
+\begin{align*}
+1 &= 11 - 2(5)\\
+&= 11 - 2(60 -5(11))\\
+&= 11(11) - 2(60)\\
+\end{align*}
+so, $d = 11$ , check:\\
+$11 * 11 \equiv 1 \pmod{60}$\\
+$\hspace{.5cm}121 \equiv 1 \pmod{60}$\\
+\newpage
+\item [(c)]\hspace{1cm}\\
+Decrypt $M \equiv C^d \pmod{77}$\\
+let $a=C=32$, $n=d=11$, $m=77$\\
+$n=1011$\\
+\begin{align*}
+r_0 &= a \pmod {77}\\
+&= 32 \pmod {77}\\
+\hspace{1cm}\\
+r_1 &= (r_0)^2 \pmod {77}\\
+&= 32^2 \pmod {77}\\
+&= 23 \pmod {77}\\
+\hspace{1cm}\\
+r_2 &= (r_1)^2 * 32 \pmod {77}\\
+&= 23^2 * 32 \pmod {77}\\
+&= 65 \pmod {77}\\
+\hspace{1cm}\\
+r_3 &= (r_2)^2 * 32 \pmod {77}\\
+&= 65^2 * 32 \pmod {77}\\
+&= 65 \pmod{77}\\ 
+\end{align*}
+so, $M = 65$\\
+%\begin{problem}
+%\begin{answer}
+%[Answer]
+%\end{answer}
+%\end{problem}
+\end{problemlist}
+\end{flushleft}
+\end{document}
