@@ -49,6 +49,7 @@ public class PrimeUtil {
 		Random rand = new Random(System.currentTimeMillis());
 		int numBits = pMinus2.bitCount();
 		BigInteger exp = new BigInteger(numBits,rand);
+		exp = exp.mod(pMinus2.add(one));
 		return exp;
 	}
 }
