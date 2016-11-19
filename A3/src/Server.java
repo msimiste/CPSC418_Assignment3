@@ -166,6 +166,7 @@ public class Server {
 
 		// check if debug flag is being set
 		int port;
+
 		if (args.length == 2) {
 			if (args[1].compareTo("debug") == 0) {
 				setDebug = true;

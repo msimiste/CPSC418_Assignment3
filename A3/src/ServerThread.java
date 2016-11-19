@@ -1,8 +1,6 @@
 import java.net.*;
 import java.io.*;
 import java.math.BigInteger;
-import java.security.*;
-import javax.crypto.*;
 import javax.crypto.spec.*;
 
 /**
@@ -20,6 +18,7 @@ public class ServerThread extends Thread
     private DataOutputStream out;
     private DataInputStream in;
     private SecretKeySpec key;   // AES encryption key
+   
 
 
     /**
@@ -81,8 +80,7 @@ public class ServerThread extends Thread
     public void getKey() {
 	debug("Getting key (seed) from user");
 
-	BigInteger sophie;
-	// open reader for usesr input
+	BigInteger sophie;	
 	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 	BigInteger pubKeyRec;
 	BigInteger sharedKey;
@@ -98,17 +96,7 @@ public class ServerThread extends Thread
 		gToBmodP = g.modPow(b, sophie);
 		CryptoUtilities.send(gToBmodP.toByteArray(), out);
 		pubKeyRec = new BigInteger(CryptoUtilities.receive(in));
-	} /*catch (IOException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-
-	// get input string from user to serve as the seed
-	String seed;
-	try {
-	    System.out.print("Please enter seed for key derivation: ");
-	    seed = stdIn.readLine();
-	}*/
+	} 
 	catch (IOException e) {
 	    System.out.println("Error getting seed from user.");
 	    return;
